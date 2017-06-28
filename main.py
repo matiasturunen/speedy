@@ -73,9 +73,8 @@ class FBScreen:
           pygame.draw.rect(self.screen, (r,g,b), (50,50,100,100))
           pygame.display.update()
           
-
-
-fbs = FBScreen()
-fbs.test()
-time.sleep(1)
+if __name__ == '__main__':
+  fbs = FBScreen()
+  fbs.test()
+  time.sleep(1)
 
