@@ -42,7 +42,6 @@ class FBScreen:
         if not driverFound:
             raise Exception('No suitable video driver found')
 
-
         size = (pygame.display.Info().current_w, pygame.display.Info().current_h)
         print("Framebuffer size: %d x %d" % (size[0], size[1]))
 
@@ -69,9 +68,36 @@ class FBScreen:
         pass
 
     def rect(self, left, top, width, height, color, autoUpdate=True):
+        """Draw rectanle to screen.
+
+        Keyword arguments:
+        left -- rectangle left edge
+        top -- rectangle top edge
+        width -- rectangle width
+        height -- rectangle height
+        color -- background color, tuple (r,g,b)
+        autoUpdate -- If True, screen is updated after drawing
+        """
         pygame.draw.rect(self.screen, color, (left, top, width, height))
         if (autoUpdate):
             pygame.display.update()
+
+    def text(self, text, position=(0,0), color=(255,255,255), fontSize=15, font=None):
+        """Draw text to screen.
+
+        Keyword arguments:
+        text -- Actual text to draw
+        position -- Position of text from top-left corner. (X,Y)
+        color -- Text color, tuple (r,g,b)
+        fontSize -- Size of font. Not used if font is set
+        font -- Pygame font to use. Default pygame.font.SysFont("monospace", 15)
+        """
+
+        if (font is None):
+            font = pygame.font.SysFont('monospace', fontSize, True)
+
+        label = font.render(text, True, color)
+        self.screen.blit(label, position)
 
     def test(self):
         # it's just a test

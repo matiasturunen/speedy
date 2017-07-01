@@ -16,7 +16,7 @@ def createMenu():
     m.addItem(item)
 
     item = ui.MenuItem('Sininen')
-    item.setTextColor((0,0,0))
+    item.setTextColor((100,0,0))
     item.setBackgroundColor((0,0,255))
     m.addItem(item)
 

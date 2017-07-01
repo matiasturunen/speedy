@@ -10,7 +10,7 @@ class MenuItem:
         self.title = title
 
     def textColor(self):
-        return self.textColor
+        return self._textColor
 
     def backgroundColor(self):
         return self._backgroundColor
@@ -41,5 +41,9 @@ class MenuItem:
             return True
         else:
             return False
+
+    def fontHeight(self):
+        """Get maximum font height that can be used in this item"""
+        return self.height - (2 * self.margin)
 
 
