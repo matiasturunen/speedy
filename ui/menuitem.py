@@ -2,6 +2,9 @@ class MenuItem:
     title = 'MenuItem'
     _textColor = (0, 255, 0)
     _backgroundColor = (100, 100, 100)
+    _action = None
+    height = 30
+    margin = 5
 
     def __init__(self, title):
         self.title = title
@@ -11,6 +14,10 @@ class MenuItem:
 
     def backgroundColor(self):
         return self._backgroundColor
+
+    def action(self):
+        if (self._action is not None):
+            self._action()
 
     def setTextColor(self, color):
         if (not self._isColor(color)):
@@ -34,3 +41,5 @@ class MenuItem:
             return True
         else:
             return False
+
+
