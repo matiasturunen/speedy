@@ -54,6 +54,9 @@ class FBScreen:
         # Init fonts
         pygame.font.init()
 
+        # Hide mouse
+        pygame.mouse.set_visible(False)
+
         # Render the screen
         pygame.display.update()
 

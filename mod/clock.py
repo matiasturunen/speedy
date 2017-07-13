@@ -24,17 +24,18 @@ class Clock(Basemod):
             self._screen = Screen
 
     def _clockLoop(self):
-        self._showTime()
-        time.sleep(self._paintInterval)
-        self._clockLoop()
+        while self._timerRunning or self._running:
+            self._showTime()
+            time.sleep(self._paintInterval)
 
     def _showTime(self):
-        print('Time:', datetime.now())
+        t = datetime.now()
+        print('Time:', t)
         self._screen.clear()
-        self._screen.text('asd', 
-            (10, 10),
+        self._screen.text(t.strftime('%H:%M:%S'), 
+            (25, 70),
             color=(255,0,0),
-            font=pygame.font.SysFont('sans-serif', 40)
+            font=pygame.font.SysFont('sans-serif', 100)
         )
 
     def _stop(self):
