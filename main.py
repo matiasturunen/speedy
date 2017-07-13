@@ -1,30 +1,35 @@
 import ui
 import time
+import mod
 
 def createMenu():
-    m = ui.Menu()
+    m = ui.menu
     m.screen = ui.Screen
 
-    item = ui.MenuItem('Punainen')
+    item = ui.MenuItem('Punainen', id=0)
     item.setTextColor((0,0,0))
     item.setBackgroundColor((255,0,0))
     m.addItem(item)
 
-    item = ui.MenuItem('Vihreä')
+    item = ui.MenuItem('Vihrea', id=1)
     item.setTextColor((0,0,0))
     item.setBackgroundColor((0,255,0))
     m.addItem(item)
 
-    item = ui.MenuItem('Sininen')
-    item.setTextColor((100,0,0))
+    item = ui.MenuItem('Kello', id=2)
+    item.setTextColor((0,0,0))
     item.setBackgroundColor((0,0,255))
+    item.setAction(mod.clock.start)
     m.addItem(item)
 
     m.draw()
 
 def main():
     createMenu()
+    time.sleep(1)
+    ui.menu.selectItem(2)
 
 if __name__ == '__main__':
     main()
-    time.sleep(5)
+    while True:
+        pass

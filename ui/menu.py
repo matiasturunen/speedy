@@ -18,16 +18,26 @@ class Menu:
         for i in self._items:
             # Menu box
             self.screen.rect(self.itemLeft, y0, 
-                self.screen.SCREEN_WIDTH(), i.height, 
-                i.backgroundColor()
+                self.screen.SCREEN_WIDTH, i.height, 
+                i.backgroundColor
             )
 
             # Actual text
             self.screen.text(i.title, 
                 (self.itemLeft + i.margin, y0 + i.margin),
-                color=i.textColor(),
-                font=pygame.font.SysFont('sans-serif', i.fontHeight())
+                color=i.textColor,
+                font=pygame.font.SysFont('sans-serif', i.fontHeight)
             )
 
             y0 += i.height + self.itemSpacing
             print('Paint', i.title)
+
+    def selectItem(self, id):
+        for i in self._items:
+            if (i.id == id):
+                i.action()
+                return
+        print('Invalid id')
+        return
+
+menu = Menu()

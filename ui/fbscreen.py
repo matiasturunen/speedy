@@ -57,9 +57,11 @@ class FBScreen:
         # Render the screen
         pygame.display.update()
 
+    @property
     def SCREEN_WIDTH(self):
         return self._SCREEN_WIDTH
 
+    @property
     def SCREEN_HEIGHT(self):
         return self._SCREEN_HEIGHT
 
@@ -82,7 +84,7 @@ class FBScreen:
         if (autoUpdate):
             pygame.display.update()
 
-    def text(self, text, position=(0,0), color=(255,255,255), fontSize=15, font=None):
+    def text(self, text, position=(0,0), color=(255,255,255), fontSize=15, font=None, autoUpdate=True):
         """Draw text to screen.
 
         Keyword arguments:
@@ -99,15 +101,18 @@ class FBScreen:
         label = font.render(text, True, color)
         self.screen.blit(label, position)
 
-    def test(self):
-        # it's just a test
-        # draw rainbow color rect on screen
-        for r in range(0,255,10):
-            for g in range(0,255,10):
-                for b in range(0,255,10):
+        if (autoUpdate):
+            pygame.display.update()
 
-                    pygame.draw.rect(self.screen, (r,g,b), (50,50,100,100))
-                    pygame.display.update()
+    def clear(self, autoUpdate=True):
+        self.screen.fill((0,0,0))
+        if (autoUpdate):
+            pygame.display.update()
+
+    def fill(self, color=(0,0,0), autoUpdate=True):
+        self.screen.fill(color)
+        if (autoUpdate):
+            pygame.display.update()
 
 
 # Make screen importable

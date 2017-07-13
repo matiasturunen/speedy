@@ -5,13 +5,17 @@ class MenuItem:
     _action = None
     height = 30
     margin = 5
+    _id = None
 
-    def __init__(self, title):
+    def __init__(self, title, id=None):
         self.title = title
+        self._id = id
 
+    @property
     def textColor(self):
         return self._textColor
 
+    @property
     def backgroundColor(self):
         return self._backgroundColor
 
@@ -29,7 +33,10 @@ class MenuItem:
         if (not self._isColor(color)):
             raise ValueError('Invalid RGB color value!')
         else:
-            self._backgroundColor = color        
+            self._backgroundColor = color 
+
+    def setAction(self, act):
+        self._action = act
 
     def _isColor(self, color):
         # Check if color is valid
@@ -42,8 +49,13 @@ class MenuItem:
         else:
             return False
 
+    @property
     def fontHeight(self):
         """Get maximum font height that can be used in this item"""
         return self.height - (2 * self.margin)
+
+    @property
+    def id(self):
+        return self._id
 
 
