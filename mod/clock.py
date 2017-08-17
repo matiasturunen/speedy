@@ -24,7 +24,7 @@ class Clock(Basemod):
             self._screen = Screen
 
     def _clockLoop(self):
-        while self._timerRunning or self._running:
+        while self._timerRunning and self._running:
             self._showTime()
             time.sleep(self._paintInterval)
 

@@ -1,15 +1,22 @@
+MenuItemId = 1
 class MenuItem:
     title = 'MenuItem'
     _textColor = (0, 255, 0)
     _backgroundColor = (100, 100, 100)
+    _borderColor = (255,255,255)
     _action = None
     height = 30
     margin = 5
     _id = None
+    parent = 0
+    _actionType = None
 
     def __init__(self, title, id=None):
+        global MenuItemId
         self.title = title
-        self._id = id
+        #self._id = id
+        self._id = MenuItemId
+        MenuItemId += 1
 
     @property
     def textColor(self):
@@ -18,6 +25,10 @@ class MenuItem:
     @property
     def backgroundColor(self):
         return self._backgroundColor
+
+    @property
+    def borderColor(self):
+        return self._borderColor
 
     def action(self):
         if (self._action is not None):
@@ -33,10 +44,18 @@ class MenuItem:
         if (not self._isColor(color)):
             raise ValueError('Invalid RGB color value!')
         else:
-            self._backgroundColor = color 
+            self._backgroundColor = color
 
-    def setAction(self, act):
+    def setBorderColor(self, color):
+        if (not self._isColor(color)):
+            raise ValueError('Invalid RGB color value!')
+        else:
+            self._borderColor = color
+
+    def setAction(self, act, atype='mod'):
+        """Set mod start function for this item"""
         self._action = act
+        self._actionType = atype
 
     def _isColor(self, color):
         # Check if color is valid
@@ -58,4 +77,10 @@ class MenuItem:
     def id(self):
         return self._id
 
+    @property
+    def actionType(self):
+        return self._actionType
+    
 
+    def __gt__(self, other):
+        return self._id > other.id

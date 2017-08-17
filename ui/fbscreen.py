@@ -72,7 +72,7 @@ class FBScreen:
         # TODO: Make sure that pygame closes itself correctly...
         pass
 
-    def rect(self, left, top, width, height, color, autoUpdate=True):
+    def rect(self, left, top, width, height, color, autoUpdate=True, borderWidth=0):
         """Draw rectanle to screen.
 
         Keyword arguments:
@@ -83,7 +83,7 @@ class FBScreen:
         color -- background color, tuple (r,g,b)
         autoUpdate -- If True, screen is updated after drawing
         """
-        pygame.draw.rect(self.screen, color, (left, top, width, height))
+        pygame.draw.rect(self.screen, color, (left, top, width, height), borderWidth)
         if (autoUpdate):
             pygame.display.update()
 
@@ -116,6 +116,9 @@ class FBScreen:
         self.screen.fill(color)
         if (autoUpdate):
             pygame.display.update()
+
+    def update(self):
+        pygame.display.update()
 
 
 # Make screen importable
