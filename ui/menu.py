@@ -1,15 +1,6 @@
 import pygame
-
-class Node:
-    nex = None
-    prev = None
-    item = None
-
-    def __init__(self, item):
-        self.nex = None
-        self.prev = None
-        self.item = item
-
+from util import stopModThreads
+import time
 
 class Menu:
     _items = []
@@ -19,7 +10,7 @@ class Menu:
     itemRight = 5
     _currentLevel = 0
     _currentItemId = None
-    _activeMods = []
+    _modActive = False
 
     def addItem(self, menuItem):
         self._items.append(menuItem)
@@ -32,11 +23,15 @@ class Menu:
         if (self.screen is None):
             print('No screen to draw at!')
             return
+
+        # Clear screen first
+        self.screen.clear(False)
         
         y0 = 5
         itemBorderWidth = 2
         itemWidth = self.screen.SCREEN_WIDTH - self.itemLeft - self.itemRight
-        print('Current item:', self._currentItemId)
+        #print('Current level:', self._currentLevel)
+        #print('Current item:', self._currentItemId)
         for i in self._items:
             if (i.parent != self._currentLevel):
                 # Skip all that are not in current level
@@ -46,6 +41,8 @@ class Menu:
                 itemWidth, i.height, 
                 i.backgroundColor
             )
+
+            print('>' if i.id==self._currentItemId else '-', i.title)
 
             if (i.id == self._currentItemId):
                 # white border
@@ -62,7 +59,6 @@ class Menu:
             )
 
             y0 += i.height + self.itemSpacing
-            print('Paint', i.title, 'id:',i.id, 'parent:',i.parent)
 
     def selectItem(self, id):
         for i in self._items:
@@ -111,35 +107,42 @@ class Menu:
                 return i
 
     def Up(self):
-        self._currentItemId = self._getPrevItem(self._currentItemId, self._currentLevel).id
-        self.draw()
+        if (not self._modActive):
+            self._currentItemId = self._getPrevItem(self._currentItemId, self._currentLevel).id
+            self.draw()
 
     def Down(self):
-        self._currentItemId = self._getNextItem(self._currentItemId, self._currentLevel).id
-        self.draw()
+        if (not self._modActive):
+            self._currentItemId = self._getNextItem(self._currentItemId, self._currentLevel).id
+            self.draw()
 
     def Left(self):
         if (self.modActive):
-            for m in self._activeMods:
-                m.stop()
+            # Stop all mod threads
+            stopModThreads()
+            self._modActive = False
             self.draw()
         else:
             if (self._currentLevel != 0):
+                print('adddss')
                 item = self._getItem(self._currentItemId)
-                self._currentLevel = item.parent
+                print('ipar', item.parent)
+                self._currentLevel = self._getItem(item.parent).parent
+                self._currentItemId = item.parent
             self.draw()
 
     def Right(self):
-        childs = self._getItemChilds(self._currentItemId)
+        childs = sorted(self._getItemChilds(self._currentItemId))
         if (len(childs) == 0):
             self._modActive = True
             self.selectItem(self._currentItemId)
         else:
             self._currentLevel = self._currentItemId
+            self._currentItemId = childs[0].id
             self.draw()
 
     @property
     def modActive(self):
-        return len(self._activeMods) == 0
+        return self._modActive
 
 menu = Menu()

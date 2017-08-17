@@ -1,32 +1,35 @@
 from .basemod import Basemod
-from ui import Screen
 from threading import Thread
 from datetime import datetime
 import pygame, time
 
 class Clock(Basemod):
     _startTime = None
-    _thread = None
     _timerRunning = False
     _paintInterval = 0.5
     _screen = None
 
     def _run(self):
-        if (not self._thread):
-            self._thread = Thread(
-                target=self._clockLoop,
-                daemon=True
-            )
-            self._thread.start()
-            self._timerRunning = True
-
         if (self._screen == None):
+            from ui import Screen
             self._screen = Screen
+            print('set screen')
+        
 
-    def _clockLoop(self):
-        while self._timerRunning and self._running:
+        #if (not self._thread):
+        print('clock run')
+        self._thread = Thread(
+            target=self._clockLoop,
+            daemon=True,
+            args=(self._thread_stop_event,) # Magic comma for python tuples
+        )
+        self._timerRunning = True
+        self._thread.start()
+
+
+    def _clockLoop(self, stop_event):
+        while self._timerRunning and not stop_event.wait(self._paintInterval):
             self._showTime()
-            time.sleep(self._paintInterval)
 
     def _showTime(self):
         t = datetime.now()
@@ -39,8 +42,8 @@ class Clock(Basemod):
         )
 
     def _stop(self):
-        if (self._timerRunning):
-            self._thread.join()
+        self._thread.join()
         self._timerRunning = False
+    
 
 clock = Clock()

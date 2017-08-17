@@ -9,7 +9,7 @@ class MenuItem:
     margin = 5
     _id = None
     parent = 0
-    _actionType = None
+    _action_stop_event = None
 
     def __init__(self, title, id=None):
         global MenuItemId
@@ -52,10 +52,10 @@ class MenuItem:
         else:
             self._borderColor = color
 
-    def setAction(self, act, atype='mod'):
+    def setAction(self, act, stop_event=None):
         """Set mod start function for this item"""
         self._action = act
-        self._actionType = atype
+        self._action_stop_event = stop_event
 
     def _isColor(self, color):
         # Check if color is valid
@@ -76,11 +76,6 @@ class MenuItem:
     @property
     def id(self):
         return self._id
-
-    @property
-    def actionType(self):
-        return self._actionType
     
-
     def __gt__(self, other):
         return self._id > other.id

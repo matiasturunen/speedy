@@ -3,24 +3,23 @@ import time
 import mod
 
 
-
 def createMenu():
     m = ui.menu
     m.screen = ui.Screen
 
 
-    item = ui.MenuItem('Nopeus', id=0)
+    item = ui.MenuItem('Nopeus')
     item.setTextColor((0,0,0))
     item.setBackgroundColor((255,0,0))
     item.active = True
     m.addItem(item)
 
-    item = ui.MenuItem('Sää', id=1)
+    item = ui.MenuItem('Sää')
     item.setTextColor((0,0,0))
     item.setBackgroundColor((0,255,0))
     m.addItem(item)
 
-    item = ui.MenuItem('Kello', id=2)
+    item = ui.MenuItem('Kello')
     item.setTextColor((0,0,0))
     item.setBackgroundColor((0,0,255))
     item.setAction(mod.clock.start)
@@ -66,7 +65,7 @@ def main():
 if __name__ == '__main__':
     main()
     while True:
-        print('WASD')
+        #print('WASD')
         inp = input('Valinta: ')
         if(inp.upper() == 'W'):
             ui.menu.Up()
