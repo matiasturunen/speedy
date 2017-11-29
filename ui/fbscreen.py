@@ -40,7 +40,7 @@ class FBScreen:
             break
 
         if not driverFound:
-            raise Exception('No suitable video driver found')
+            raise Exception('No suitable video driver found. \nSwitch to root uset and try again.')
 
         size = (pygame.display.Info().current_w, pygame.display.Info().current_h)
         print("Framebuffer size: %d x %d" % (size[0], size[1]))
@@ -54,7 +54,7 @@ class FBScreen:
         # Init fonts
         pygame.font.init()
 
-        # Hide mouse
+        # Hide mouse 
         pygame.mouse.set_visible(False)
 
         # Render the screen

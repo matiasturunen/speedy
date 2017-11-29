@@ -1,7 +1,17 @@
+import RPi.GPIO as GPIO
+
 import ui
 import time
 import mod
 
+# Use physical buttons
+buttons = True
+btnlist = {
+    12: 'RIGHT',    # 4 on keypad
+    13: 'LEFT',     # 3 on keypad
+    15: 'DOWN',     # 2 on keypad
+    16: 'UP'        # 1 on keypad
+}
 
 def createMenu():
     m = ui.menu
@@ -57,25 +67,52 @@ def createMenu():
     m.draw()
 
 
+def initButtons():
+    GPIO.setmode(GPIO.BOARD)
+    for btn in btnlist.keys():
+        GPIO.setup(btn, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+
 def main():
     createMenu()
+    initButtons()
     time.sleep(2)
-    #ui.menu.selectItem(2) 
+    
+
 
 if __name__ == '__main__':
     main()
+
     while True:
-        #print('WASD')
-        inp = input('Valinta: ')
-        if(inp.upper() == 'W'):
-            ui.menu.Up()
-        elif(inp.upper() == 'A'):
-            ui.menu.Left()
-        elif(inp.upper() == 'S'):
-            ui.menu.Down()
-        elif(inp.upper() == 'D'):
-            ui.menu.Right()
+        if (buttons):
+            try:
+                for btn in btnlist.keys():
+                    if (GPIO.input(btn) == False):
+                        direction = btnlist[btn]
+                        if (direction == 'UP'):
+                            ui.menu.Up()
+                        elif (direction == 'DOWN'):
+                            ui.menu.Down()
+                        elif (direction == 'LEFT'):
+                            ui.menu.Left()
+                        elif (direction == 'RIGHT'):
+                            ui.menu.Right()
+                        time.sleep(0.5)
+
+            except Exception as e:
+                print('Buttons error:', e)
+
         else:
-            print('invalid')
+            inp = input('Valinta: ')
+            if(inp.upper() == 'W'):
+                ui.menu.Up()
+            elif(inp.upper() == 'A'):
+                ui.menu.Left()
+            elif(inp.upper() == 'S'):
+                ui.menu.Down()
+            elif(inp.upper() == 'D'):
+                ui.menu.Right()
+            else:
+                print('invalid')
 
 

@@ -5,6 +5,7 @@ from mod.basemod import Basemod
 def stopModThreads():
 	for obj in gc.get_objects():
 		if isinstance(obj, Basemod):
-			obj.thread_stop_event.set()
-			obj.thread.join()
-			obj.thread_stop_event.clear()
+			if (obj.thread is not None):
+				obj.thread_stop_event.set()
+				obj.thread.join()
+				obj.thread_stop_event.clear()
