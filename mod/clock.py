@@ -16,7 +16,7 @@ class Clock(Basemod):
     def tick(self):
         t = datetime.now()
         print('Time:', t)
-        self._screen.clear()
+        self._screen.clear(autoUpdate=False)
         self._screen.text(t.strftime('%H:%M:%S'), 
             (25, 70),
             color=(255,0,0),

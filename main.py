@@ -27,6 +27,7 @@ def createMenu():
     item = ui.MenuItem('Sää')
     item.setTextColor((0,0,0))
     item.setBackgroundColor((0,255,0))
+    item.setAction(mod.weather.start)
     m.addItem(item)
 
     item = ui.MenuItem('Kello')

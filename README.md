@@ -1,5 +1,7 @@
 # Speedy
 ## Raspberry pi project to show sailboat speed and weather information on screen.
 
-## TODO:
-rewrite mods with proper threading so that menu can be used while they are running
+## Requirements
+Adafruit TFT (https://www.adafruit.com/product/2315)
+Adafruit ADC (https://www.adafruit.com/product/1083)
+Adafruit Temp sensor (https://www.adafruit.com/product/2652)

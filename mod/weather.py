@@ -1,49 +1,56 @@
 from .basemod import Basemod
 from threading import Thread
 from datetime import datetime
+from Adafruit_BME280 import *
 import pygame, time
 
+
 class Weather(Basemod):
-    _startTime = None
-    _timerRunning = False
-    _paintInterval = 2.0
     _screen = None
+    sensor = None
 
     def _run(self):
+        super()._run()
+        self._timerInterval = 5.0
         if (self._screen == None):
             from ui import Screen
             self._screen = Screen
             print('set screen')
-        
-
-        #if (not self._thread):
-        print('clock run')
-        self._thread = Thread(
-            target=self._clockLoop,
-            daemon=True,
-            args=(self._thread_stop_event,) # Magic comma for python tuples
-        )
-        self._timerRunning = True
-        self._thread.start()
 
 
-    def _clockLoop(self, stop_event):
-        while self._timerRunning and not stop_event.wait(self._paintInterval):
-            self._showTime()
+        self.sensor = BME280(t_mode=BME280_OSAMPLE_8, p_mode=BME280_OSAMPLE_8, h_mode=BME280_OSAMPLE_8)
 
-    def _showTime(self):
-        t = datetime.now()
-        print('Time:', t)
-        self._screen.clear()
-        self._screen.text(t.strftime('%H:%M:%S'), 
-            (25, 70),
+    def tick(self):
+        degrees = self.sensor.read_temperature()
+        pascals = self.sensor.read_pressure()
+        hectopascals = pascals / 100
+        humidity = self.sensor.read_humidity()
+
+        temp = '{0:4.1f} deg C'.format(degrees)
+        pres = '{0:d} hPa'.format(int(hectopascals))
+        hum = '{0:d} %'.format(int(humidity))
+
+        self._screen.clear(autoUpdate=False)
+        self._screen.text(temp,  
+            (5, 5),
             color=(255,0,0),
-            font=pygame.font.SysFont('sans-serif', 100)
+            font=pygame.font.SysFont('sans-serif', 90),
+            autoUpdate=False
+        )
+        self._screen.text(pres,  
+            (5, 80),
+            color=(255,0,0),
+            font=pygame.font.SysFont('sans-serif', 90),
+            autoUpdate=False
+        )
+        self._screen.text(hum,  
+            (5, 155),
+            color=(255,0,0),
+            font=pygame.font.SysFont('sans-serif', 90),
+            autoUpdate=True
         )
 
-    def _stop(self):
-        self._thread.join()
-        self._timerRunning = False
+
     
 
 weather = Weather()
