@@ -2,6 +2,7 @@ import time
 import serial
 import pynmea2
 
+from gps import gps
 port = "/dev/ttyAMA0" # the serial port to which the pi is connected.
 
 ### Autorun at /etc/rc.local ###
@@ -51,8 +52,12 @@ while 1:
                 longval = msg.lon
                 concatlong = "long:"+ str(longval)
                 print (concatlong)
-        except:
+
+                print('LAT ' + str(gps.convertCoordinates(msg.lat, msg.lat_dir)))
+                print('LON ' + str(gps.convertCoordinates(msg.lon, msg.lon_dir)))
+        except Exception as e:
             print('error')
+            print(e)
 
     # if data[0:6] == '$GPRMC':
     #     print(data)
