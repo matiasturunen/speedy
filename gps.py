@@ -1,23 +1,25 @@
+import math
+
 class GPS:
     def convertCoordinates(self, coord, d):
         """Convert NMEA coordinates to decimal
         """
         if (d == 'N' or d == 'S'):
-            dd = int(coord[0:2])
-            ss = float(coord[2:])
+            dd = int(str(coord[0:2]))
+            ss = float(str(coord[2:]))
             latDec = dd + ss/60
 
             if (d == 'S'):
                 latDec = latDec * -1
             return latDec
         elif (d == 'E' or d == 'W'):
-            dd = int(coord[0:3])
-            ss = float(coord[3:])
-            latLng = dd + ss/60
+            dd = int(str(coord[0:3]))
+            ss = float(str(coord[3:]))
+            lonDec = dd + ss/60
 
             if (d == 'W'):
-                latLng = latLng * -1
-            return latLng
+                lonDec = lonDec * -1
+            return lonDec
 
     def haversine(self, lat1, lon1, lat2, lon2):
         """Calculate distance between two points
@@ -25,8 +27,8 @@ class GPS:
         dlon = lon2 - lon1
         dlat = lat2 - lat1
 
-        a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
-        c = 2*asin(sqrt(a))
+        a = math.sin(dlat/2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon/2)**2
+        c = 2*math.asin(math.sqrt(a))
         r = 6371 # Radius of earth
 
         d = c * r

@@ -9,11 +9,15 @@ port = "/dev/ttyAMA0" # the serial port to which the pi is connected.
 
 #create a serial object
 ser = serial.Serial(port, baudrate = 9600, timeout = 1.0)
-filename = '/home/pi/speedy/gpsoutput.txt'
+filename = '/home/pi/speedy/gpsoutput_' + time.strftime('%d_%m_%H_%M_%S')
 
 with open(filename, 'w') as f:
     f.write('GPS DATA\n')
     pass
+
+prevLat = 0
+prevLon = 0
+prevTime = 0
 
 while 1:
     try:
@@ -43,26 +47,33 @@ while 1:
                 print(msg)
                 f.write(str(msg) + '\n')
 
-                #parse the latitude and print
-                latval = msg.lat
-                concatlat = "lat:" + str(latval)
-                print (concatlat)
-        
-                #parse the longitude and print
-                longval = msg.lon
-                concatlong = "long:"+ str(longval)
-                print (concatlong)
+                # Skip message if it has no lat or long values
+                if (msg.lat == '' or msg.lon == ''):
+                    continue
 
-                print('LAT ' + str(gps.convertCoordinates(msg.lat, msg.lat_dir)))
-                print('LON ' + str(gps.convertCoordinates(msg.lon, msg.lon_dir)))
+                # Convert lat and lon to decimal
+                latDec = gps.convertCoordinates(msg.lat, msg.lat_dir)
+                lonDec = gps.convertCoordinates(msg.lon, msg.lon_dir)
+
+                print('LAT: ' + str(latDec))
+                print('LON: ' + str(lonDec))
+
+                if (prevTime > 0):
+                    timeDelta = time.time() - prevTime
+                    #print('Timedelta: ' + str(timeDelta))
+                    print('Distance: ' + str(gps.haversine(prevLat, prevLon, latDec, lonDec)))
+                    print('Speed: ' + str(gps.getSpeed(prevLat, prevLon, latDec, lonDec, timeDelta)))
+                
+                # save current info
+                prevTime = time.time()
+                prevLat = latDec
+                prevLon = lonDec
+                
+
         except Exception as e:
             print('error')
             print(e)
-
-    # if data[0:6] == '$GPRMC':
-    #     print(data)
-    #     pass
         
-    time.sleep(0.1)#wait a little before picking the next data.
-    #print('Time ' + str(time.strftime('%X')))
+    time.sleep(0.5)#wait a little before picking the next data.
+
 print('GPS STOPPED')
