@@ -2,6 +2,7 @@ import math
 import time
 import serial
 import pynmea2
+import datetime as dt
 from threading import Thread
 from queue import LifoQueue, Empty
 
@@ -34,6 +35,9 @@ class GPS:
 
     _thread = None
     queueSize = 100
+
+    systemTimeSet = False
+    systemTimeOffset = 3 # Hours
 
     def convertCoordinates(self, coord, d):
         """Convert NMEA coordinates to decimal
@@ -78,6 +82,21 @@ class GPS:
 
         return speed
 
+    def setSystemTime(self, t):
+        """Set system time from gps time
+        """
+        print(t)
+
+        # Convert to full datetime
+        now = dt.datetime.now()
+        d = dt.datetime.combine(dt.date(now.year, now.month, now.day), t)
+        # Convert to seconds 
+        seconds = (d-dt.datetime(1970,1,1)).total_seconds()
+        # set clock
+        time.clock_settime(time.CLOCK_REALTIME, seconds)
+        print('Clock set')
+
+
     def GPSLoop(self, queue):
         if (self.ser == None):
             self.ser = serial.Serial(self.port, baudrate = 9600, timeout = 1.0)
@@ -107,7 +126,11 @@ class GPS:
                     # Pynmea2 parse error
                     continue
 
-                print(data)
+                if (self.systemTimeSet == False):
+                    self.setSystemTime(msg.timestamp)
+                    self.systemTimeSet = True
+
+                #print(data)
 
                 # Skip message if it has no lat or lon values
                 if (msg.lat == '' or msg.lon == ''):
