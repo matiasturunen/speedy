@@ -45,7 +45,7 @@ while 1:
             with open(filename, 'a') as f:
                 msg = pynmea2.parse(data)
                 print(msg)
-                f.write(str(msg) + '\n')
+                f.write(str(msg) + ',' + str(time.time()) + '\n')
 
                 # Skip message if it has no lat or long values
                 if (msg.lat == '' or msg.lon == ''):

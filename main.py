@@ -4,6 +4,8 @@ import ui
 import time
 import mod
 
+from gps import gps
+
 # Use physical buttons
 buttons = True
 btnlist = {
@@ -13,14 +15,22 @@ btnlist = {
     16: 'UP'        # 1 on keypad
 }
 
+GPSQueue = None
+
+def initGPS():
+    global GPSQueue
+    GPSQueue = gps.GPSThread()
+
 def createMenu():
+    global GPSQueue
     m = ui.menu
     m.screen = ui.Screen
-
 
     item = ui.MenuItem('Nopeus')
     item.setTextColor((0,0,0))
     item.setBackgroundColor((255,0,0))
+    item.setAction(mod.speed.start)
+    item.setArgs(gpsqueue=GPSQueue,)
     item.active = True
     m.addItem(item)
 
@@ -59,12 +69,6 @@ def createMenu():
     item.parent = kelloasetus.id
     m.addItem(item)
 
-    item = ui.MenuItem('Nopeus')
-    item.setTextColor((0,0,0))
-    item.setBackgroundColor((255,255,0))
-    item.parent = asetukset.id
-    m.addItem(item)
-
     m.draw()
 
 
@@ -75,6 +79,7 @@ def initButtons():
 
 
 def main():
+    initGPS()
     createMenu()
     initButtons()
     time.sleep(2)

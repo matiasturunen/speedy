@@ -10,6 +10,7 @@ class MenuItem:
     _id = None
     parent = 0
     _action_stop_event = None
+    _actionArgs = None
 
     def __init__(self, title, id=None):
         global MenuItemId
@@ -32,7 +33,10 @@ class MenuItem:
 
     def action(self):
         if (self._action is not None):
-            self._action()
+            if (self._actionArgs is not None):
+                self._action(self._actionArgs) # Run action with args
+            else:
+                self._action()
 
     def setTextColor(self, color):
         if (not self._isColor(color)):
@@ -56,6 +60,9 @@ class MenuItem:
         """Set mod start function for this item"""
         self._action = act
         self._action_stop_event = stop_event
+
+    def setArgs(self, **kwargs):
+        self._actionArgs = kwargs
 
     def _isColor(self, color):
         # Check if color is valid
