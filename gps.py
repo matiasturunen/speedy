@@ -126,11 +126,9 @@ class GPS:
                     # Pynmea2 parse error
                     continue
 
-                if (self.systemTimeSet == False):
+                if (self.systemTimeSet == False and msg.timestamp != "" and msg.timestamp != None):
                     self.setSystemTime(msg.timestamp)
                     self.systemTimeSet = True
-
-                #print(data)
 
                 # Skip message if it has no lat or lon values
                 if (msg.lat == '' or msg.lon == ''):
@@ -157,6 +155,7 @@ class GPS:
                                     queue.qet()
                                 except Empty:
                                     continue
+
                         info = GPSInfo(speed, distance)
                         queue.put(info)
 

@@ -1,13 +1,13 @@
 from .basemod import Basemod
 from queue import Empty
 import pygame, time
+import math
 
 class Speed(Basemod):
     _screen = None
     _GPSQueue = None
 
     def start(self, kwargs):
-        print('kwargs: ' + str(kwargs))
         if ('gpsqueue' in kwargs.keys()):
             self._GPSQueue = kwargs['gpsqueue']
         super().start()
@@ -29,13 +29,14 @@ class Speed(Basemod):
             spd = info.speed
             dist = info.distance
         except Empty:
+            #print('Empty queue')
             pass
-        except Exception:
+        except Exception as e:
             pass
             
         
         self._screen.clear(autoUpdate=False)
-        self._screen.text(str(spd) + ' m/s', 
+        self._screen.text(str(round(spd, 1)) + ' m/s', 
             (25, 70),
             color=(255,0,0),
             font=pygame.font.SysFont('sans-serif', 100)

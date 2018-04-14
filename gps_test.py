@@ -5,8 +5,6 @@ import pynmea2
 from gps import gps
 port = "/dev/ttyAMA0" # the serial port to which the pi is connected.
 
-### Autorun at /etc/rc.local ###
-
 #create a serial object
 ser = serial.Serial(port, baudrate = 9600, timeout = 1.0)
 filename = '/home/pi/speedy/gpsoutput_' + time.strftime('%d_%m_%H_%M_%S')
