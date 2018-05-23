@@ -7,10 +7,10 @@ port = "/dev/ttyAMA0" # the serial port to which the pi is connected.
 
 #create a serial object
 ser = serial.Serial(port, baudrate = 9600, timeout = 1.0)
-filename = '/home/pi/speedy/gpsoutput_' + time.strftime('%d_%m_%H_%M_%S')
+filename = '/home/pi/speedy/gpsoutput_' + time.strftime('%d.%m_%H.%M.%S')
 
 with open(filename, 'w') as f:
-    f.write('GPS DATA\n')
+    f.write('lat;lon;time\n')
     pass
 
 prevLat = 0
@@ -43,7 +43,7 @@ while 1:
             with open(filename, 'a') as f:
                 msg = pynmea2.parse(data)
                 print(msg)
-                f.write(str(msg) + ',' + str(time.time()) + '\n')
+                
 
                 # Skip message if it has no lat or long values
                 if (msg.lat == '' or msg.lon == ''):
@@ -61,6 +61,8 @@ while 1:
                     #print('Timedelta: ' + str(timeDelta))
                     print('Distance: ' + str(gps.haversine(prevLat, prevLon, latDec, lonDec)))
                     print('Speed: ' + str(gps.getSpeed(prevLat, prevLon, latDec, lonDec, timeDelta)))
+
+                    f.write(str(latDec) + ';' + str(lonDec) + ';' + str(time.time()) + '\n')
                 
                 # save current info
                 prevTime = time.time()

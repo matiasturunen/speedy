@@ -27,7 +27,7 @@ class GPS:
     port = "/dev/ttyAMA0"
     ser = None
 
-    outputfile = ""
+    outputfile = "/home/pi/speedy/gpsoutput_" + time.strftime('%d.%m_%H.%M.%S')
 
     prevLat = 0
     prevLon = 0
@@ -158,6 +158,10 @@ class GPS:
 
                         info = GPSInfo(speed, distance)
                         queue.put(info)
+
+                        with open(outputfile, 'a') as f:
+                            # Lat;Lon;timestamp
+                            f.write(str(latDec) + ';' + str(lonDec) + ';' + str(time.time()) + '\n')
 
                     print('Distance: ' + str(distance))
                     print('Speed: ' + str(speed))
