@@ -39,6 +39,11 @@ class GPS:
     systemTimeSet = False
     systemTimeOffset = 3 # Hours
 
+    def __init__(self):
+        #format outputfile
+        with open(self.outputfile, 'w') as f:
+            f.write('lat;lon;time\n')
+
     def convertCoordinates(self, coord, d):
         """Convert NMEA coordinates to decimal
         """
@@ -98,17 +103,25 @@ class GPS:
 
 
     def GPSLoop(self, queue):
-        if (self.ser == None):
-            self.ser = serial.Serial(self.port, baudrate = 9600, timeout = 1.0)
+        while (self.ser == None):
+            # Try to force serial creation
+            try:
+                self.ser = serial.Serial(self.port, baudrate = 9600, timeout = 1.0)
+            except serail.SerialException:
+                print('serial error')
+                continue
         
         while True:
             try:
                 data = self.ser.readline()
                 data = data.decode("utf-8")
             except serial.SerialException:
-                # recreate serial
-                self.ser.close()
-                self.ser = serial.Serial(self.port, baudrate = 9600, timeout = 1.0)
+                # try to recreate serial
+                try:
+                    self.ser.close()
+                    self.ser = serial.Serial(self.port, baudrate = 9600, timeout = 1.0)
+                except serial.SerialException:
+                    continue
                 #print('recreate serial')
 
             except UnicodeDecodeError:
@@ -159,7 +172,7 @@ class GPS:
                         info = GPSInfo(speed, distance)
                         queue.put(info)
 
-                        with open(outputfile, 'a') as f:
+                        with open(self.outputfile, 'a') as f:
                             # Lat;Lon;timestamp
                             f.write(str(latDec) + ';' + str(lonDec) + ';' + str(time.time()) + '\n')
 
