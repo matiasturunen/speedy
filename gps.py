@@ -172,9 +172,9 @@ class GPS:
                         info = GPSInfo(speed, distance)
                         queue.put(info)
 
-                        with open(self.outputfile, 'a') as f:
-                            # Lat;Lon;timestamp
-                            f.write(str(latDec) + ';' + str(lonDec) + ';' + str(time.time()) + '\n')
+                    with open(self.outputfile, 'a') as f:
+                        # Lat;Lon;timestamp
+                        f.write(str(latDec) + ';' + str(lonDec) + ';' + str(time.time()) + '\n')
 
                     print('Distance: ' + str(distance))
                     print('Speed: ' + str(speed))
