@@ -1,0 +1,16 @@
+#map {
+	width: 1400px;
+	height: 1000px;
+	float: left;
+}
+
+#fileupload {
+	width: 400px;
+	height: 400px;
+	float: left;
+	border: 2px dashed #ccc;
+}
+
+#fileupload.highlight {
+	border-color: purple;
+}

@@ -1,0 +1,35 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+
+	<title>Speedy tracker</title>
+	<meta name="description" content="Speedy tracker">
+
+	<link rel="stylesheet" href="style.css">
+
+	<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.46.0/mapbox-gl.js'></script>
+	<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.46.0/mapbox-gl.css' rel='stylesheet' />
+
+
+</head>
+
+<body>
+	<div id='map'></div>
+
+	<div id="fileupload">
+		<form class="fileform">
+			<input type="file" id="fileinp" name="fileinp" onchange="handleFiles(this.items)">
+			<label>Drop gps data here</label>
+		</form>
+	</div>
+	<div id="statistics">
+		<p>Top speed: <span id="topSpeed"></span></p>
+		<p>Average speed: <span id="averageSpeed"></span></p>
+		<p>Total distance<span id="distance"></span></p>
+	</div>
+
+ 	<script src="script.js"></script>
+</body>
+</html>
