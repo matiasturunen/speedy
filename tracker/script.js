@@ -19,6 +19,12 @@ const geojson = {
   }]
 };
 
+
+const mapPoints = {
+  "type": "FeatureCollection",
+  "features": []
+};
+
 const dropArea = $('#fileupload');
 
 function preventDefaults(e) {
@@ -87,7 +93,7 @@ function haversine(lat1, lon1, lat2, lon2) {
 }
 
 function getSpeed(lat1, lon1, lat2, lon2, time) {
-  return haversine(lat1, lon1, lat2, lon2) / time;
+  return haversine(lat1, lon1, lat2, lon2)*1000 / time;
 }
 
 function average(arr) {
@@ -101,6 +107,7 @@ function processGPSTrack(coordinates) {
   const speeds = [];
   let averageSpeed = 0;
   let distance = 0;
+  let totalTime = 0;
 
   let prevtime = 0
   let prevLat = 0;
@@ -109,6 +116,9 @@ function processGPSTrack(coordinates) {
   const topSpeedLabel = $('#topSpeed');
   const avgSpeedLabel = $('#averageSpeed');
   const distanceLabel = $('#distance');
+  const totalTimeLabel = $('#totalTime');
+
+  let topSpeedLocation = { lat: 0, lon: 0 }
 
   coordinates.forEach(coords => {
     if (prevtime == 0) {
@@ -129,7 +139,10 @@ function processGPSTrack(coordinates) {
 
       if (spd > topSpeed) {
         topSpeed = spd;
+        topSpeedLocation = { lat: coords.lat, lon: coords.lon };
       }
+
+      totalTime += timeDelta;
       
       prevtime = coords.time;
       prevLat = coords.lat;
@@ -138,11 +151,13 @@ function processGPSTrack(coordinates) {
 
   });
   drawRoute(coordinates);
+  drawLocation(topSpeedLocation, 'Top speed achieved');
 
   // Update labels
   topSpeedLabel.html(topSpeed);
   avgSpeedLabel.html(average(speeds));
   distanceLabel.html(distance);
+  totalTimeLabel.html(totalTime/3600);
 }
 
 function drawRoute(coordinates) {
@@ -158,7 +173,22 @@ function drawRoute(coordinates) {
   });
 
   map.getSource('route').setData(geojson);
-  console.log(geojson)
+}
+
+function drawLocation(location, name) {
+  mapPoints.features.push({
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [ location.lon, location.lat ]
+    },
+      "properties": {
+        "title": name,
+        "icon": "marker"
+      }
+  });
+
+  map.getSource('points').setData(mapPoints);
 }
 
 // Add events for droparea
@@ -181,6 +211,18 @@ map.on('load', () => {
       'line-color': '#ed6498',
       'line-width': 5,
       'line-opacity': .8
+    }
+  });
+
+  map.addSource('points', {type: 'geojson', data: mapPoints})
+  map.addLayer({
+    'id': 'points',
+    'type': 'symbol',
+    'source': 'points',
+    'layout': {
+    },
+    'paint': {
+      'icon-color': '#e55e5e'
     }
   });
 });
